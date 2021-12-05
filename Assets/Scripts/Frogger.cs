@@ -5,6 +5,7 @@ using UnityEngine;
 public class Frogger : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
+    private GameManager gameManager;
 
     public Sprite idleSprite;
     public Sprite leapSprite;
@@ -23,6 +24,7 @@ public class Frogger : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         playSound = GetComponent<AudioSource>();
+        gameManager = FindObjectOfType<GameManager>();
         spawnPosition = transform.position;
     }
     private void Update()
@@ -73,7 +75,7 @@ public class Frogger : MonoBehaviour
 
         if (water != null && platform == null)
         {
-            playSound.PlayOneShot(leapSplash);
+            playSound.PlayOneShot(leapSplash, volume);
             transform.position = destination;
             Death();
         }
@@ -89,7 +91,7 @@ public class Frogger : MonoBehaviour
             if (destination.y > farthestRow)
             {
                 farthestRow = destination.y;
-                FindObjectOfType<GameManager>().AdvanceScore();
+                gameManager.AdvanceScore();
             }
 
             StopAllCoroutines();
@@ -107,7 +109,7 @@ public class Frogger : MonoBehaviour
 
         float elapsed = 0f;
         float duration = 0.125f;
-        playSound.PlayOneShot(leapSound);
+        playSound.PlayOneShot(leapSound, volume);
         while (elapsed < duration)
         {
            
@@ -132,14 +134,13 @@ public class Frogger : MonoBehaviour
        
         Invoke(nameof(Respawn), 1f);
 
-        FindObjectOfType<GameManager>().Died();
+        gameManager.Died();
     }
 
     public void Respawn()
     {
         StopAllCoroutines();
-        transform.rotation = Quaternion.identity;
-        transform.position = spawnPosition;
+        transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
         farthestRow = spawnPosition.y;
         spriteRenderer.sprite = idleSprite;
         gameObject.SetActive(true);
