@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     public GameObject startPage;
     public GameObject playGamePage;
     public GameObject gameOverPage;
+    public GameObject gameStatsPage;
+
     enum PageState
     {
         Start,
@@ -121,15 +123,18 @@ public class GameManager : MonoBehaviour
         {
             case PageState.Start:
                 startPage.SetActive(true);
+                gameStatsPage.SetActive(false);  
                 gameOverPage.SetActive(false);
                 playGamePage.SetActive(false);
                 break;
             case PageState.GameOver:
+                gameStatsPage.SetActive(true);      
                 startPage.SetActive(false);
                 gameOverPage.SetActive(true);
                 playGamePage.SetActive(false);
                 break;
             case PageState.Game:
+                gameStatsPage.SetActive(true);
                 startPage.SetActive(false);
                 gameOverPage.SetActive(false);
                 playGamePage.SetActive(true);
